@@ -1,10 +1,8 @@
 import { describe, test, expect, beforeEach } from "vitest";
 import fs from "fs";
 import path from "path";
-import { VideogameManager } from "../src/services/VideogameManager.js";
-
-import { Platform } from "../src/models/Videogame.js"
-import { Genre } from "../src/models/Videogame.js"
+import { VideogameManager } from "../src/services/VideogameManager.ts";
+import { Platform, Genre } from "../src/models/Videogame.ts";
 
 const TEST_DIR = "test-data";
 
@@ -15,7 +13,7 @@ describe("VideogameManager", () => {
     }
   });
 
-  test("Add a videogame creates the JSON file", () => {
+  test("Add creates JSON file", () => {
     const manager = new VideogameManager(TEST_DIR);
 
     manager.add("iker", {
@@ -35,7 +33,7 @@ describe("VideogameManager", () => {
     expect(fs.existsSync(filePath)).toBe(true);
   });
 
-  test("Add a videogame twice does NOT overwrite", () => {
+  test("Add twice does NOT overwrite", () => {
     const manager = new VideogameManager(TEST_DIR);
 
     manager.add("iker", {
@@ -52,12 +50,11 @@ describe("VideogameManager", () => {
     });
 
     const filePath = path.join(TEST_DIR, "iker", "1.json");
-    const originalContent = fs.readFileSync(filePath, "utf-8");
+    const original = fs.readFileSync(filePath, "utf-8");
 
-    // Intento de añadir el mismo ID
     manager.add("iker", {
       id: 1,
-      name: "Another Game",
+      name: "Another",
       description: "desc2",
       platform: Platform.PC,
       genre: Genre.Action,
@@ -68,18 +65,16 @@ describe("VideogameManager", () => {
       value: 60
     });
 
-    const newContent = fs.readFileSync(filePath, "utf-8");
-
-    // El archivo NO debe cambiar
-    expect(newContent).toBe(originalContent);
+    const after = fs.readFileSync(filePath, "utf-8");
+    expect(after).toBe(original);
   });
 
-  test("Update modifies an existing videogame", () => {
+  test("Update modifies JSON", () => {
     const manager = new VideogameManager(TEST_DIR);
 
     manager.add("iker", {
       id: 1,
-      name: "Old Name",
+      name: "Old",
       description: "desc",
       platform: Platform.PC,
       genre: Genre.Action,
@@ -92,8 +87,8 @@ describe("VideogameManager", () => {
 
     manager.update("iker", {
       id: 1,
-      name: "New Name",
-      description: "desc updated",
+      name: "New",
+      description: "updated",
       platform: Platform.PC,
       genre: Genre.Action,
       developer: "Dev",
@@ -106,16 +101,35 @@ describe("VideogameManager", () => {
     const filePath = path.join(TEST_DIR, "iker", "1.json");
     const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
-    expect(data.name).toBe("New Name");
-    expect(data.description).toBe("desc updated");
+    expect(data.name).toBe("New");
+    expect(data.description).toBe("updated");
   });
 
-  test("Remove deletes the JSON file", () => {
+  test("Update does not crash if game does not exist", () => {
+    const manager = new VideogameManager(TEST_DIR);
+
+    expect(() =>
+      manager.update("iker", {
+        id: 99,
+        name: "X",
+        description: "X",
+        platform: Platform.PC,
+        genre: Genre.Action,
+        developer: "Dev",
+        year: 2020,
+        multiplayer: false,
+        hours: 10,
+        value: 50
+      })
+    ).not.toThrow();
+  });
+
+  test("Remove deletes JSON", () => {
     const manager = new VideogameManager(TEST_DIR);
 
     manager.add("iker", {
       id: 1,
-      name: "Test Game",
+      name: "Test",
       description: "desc",
       platform: Platform.PC,
       genre: Genre.Action,
@@ -130,18 +144,39 @@ describe("VideogameManager", () => {
     expect(fs.existsSync(filePath)).toBe(true);
 
     manager.remove("iker", 1);
-
     expect(fs.existsSync(filePath)).toBe(false);
   });
 
-  test("List does not crash when user has no games", () => {
+  test("Remove does not crash if game does not exist", () => {
     const manager = new VideogameManager(TEST_DIR);
+    expect(() => manager.remove("iker", 123)).not.toThrow();
+  });
 
-    // No debe lanzar error
+  test("List works with no games", () => {
+    const manager = new VideogameManager(TEST_DIR);
     expect(() => manager.list("iker")).not.toThrow();
   });
 
-  test("Read loads the correct videogame", () => {
+  test("List works with games", () => {
+    const manager = new VideogameManager(TEST_DIR);
+
+    manager.add("iker", {
+      id: 1,
+      name: "Game",
+      description: "desc",
+      platform: Platform.PC,
+      genre: Genre.Action,
+      developer: "Dev",
+      year: 2020,
+      multiplayer: false,
+      hours: 10,
+      value: 10
+    });
+
+    expect(() => manager.list("iker")).not.toThrow();
+  });
+
+  test("Read loads correct game", () => {
     const manager = new VideogameManager(TEST_DIR);
 
     manager.add("iker", {
@@ -161,5 +196,10 @@ describe("VideogameManager", () => {
     const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
 
     expect(data.name).toBe("Read Test");
+  });
+
+  test("Read does not crash if game does not exist", () => {
+    const manager = new VideogameManager(TEST_DIR);
+    expect(() => manager.read("iker", 999)).not.toThrow();
   });
 });

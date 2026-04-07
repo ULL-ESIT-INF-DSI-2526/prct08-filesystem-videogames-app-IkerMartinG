@@ -11,10 +11,21 @@ import {
   ListArgs
 } from "./command-types.js";
 
+/**
+ * Instancia principal del gestor de videojuegos.
+ * Se encarga de añadir, modificar, eliminar, listar y leer videojuegos.
+ */
 const manager = new VideogameManager();
 
+/**
+ * Configuración del CLI mediante yargs.
+ * Cada comando está documentado con TSDoc y tipado mediante generics.
+ */
 yargs(hideBin(process.argv))
 
+  /**
+   * Requiere todos los campos definidos en AddArgs.
+   */
   .command<AddArgs>(
     "add",
     "Add a videogame",
@@ -48,6 +59,9 @@ yargs(hideBin(process.argv))
     }
   )
 
+  /**
+   * Si el videojuego no existe, se muestra un mensaje de error.
+   */
   .command<UpdateArgs>(
     "update",
     "Update a videogame",
@@ -81,6 +95,9 @@ yargs(hideBin(process.argv))
     }
   )
 
+  /**
+   * Elimina un videojuego de la colección del usuario.
+   */
   .command<RemoveArgs>(
     "remove",
     "Remove a videogame",
@@ -92,6 +109,9 @@ yargs(hideBin(process.argv))
     (argv) => manager.remove(argv.user, argv.id)
   )
 
+  /**
+   * Utiliza colores mediante chalk para mostrar el valor de mercado.
+   */
   .command<ListArgs>(
     "list",
     "List videogames",
@@ -102,6 +122,9 @@ yargs(hideBin(process.argv))
     (argv) => manager.list(argv.user)
   )
 
+  /**
+   * Muestra la información de un videojuego concreto.
+   */
   .command<ReadArgs>(
     "read",
     "Read a videogame",
@@ -113,5 +136,6 @@ yargs(hideBin(process.argv))
     (argv) => manager.read(argv.user, argv.id)
   )
 
+  // Muestra ayuda general del CLI
   .help()
-  .argv;
+  .parse();

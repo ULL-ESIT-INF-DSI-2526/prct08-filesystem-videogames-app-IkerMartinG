@@ -6,7 +6,7 @@ export enum Platform {
   PS5 = "PlayStation 5",
   Xbox = "Xbox Series X/S",
   Switch = "Nintendo Switch",
-  SteamDeck = "Steam Deck"
+  SteamDeck = "Steam Deck",
 }
 
 export enum Genre {
@@ -15,7 +15,7 @@ export enum Genre {
   RPG = "RPG",
   Strategy = "Strategy",
   Sports = "Sports",
-  Simulation = "Simulation"
+  Simulation = "Simulation",
 }
 
 export interface VideogameProps {
@@ -34,7 +34,7 @@ export interface VideogameProps {
 /**
  * Videogame class with validation.
  */
-export class Videoggame implements VideogameProps {
+export class Videogame implements VideogameProps {
   constructor(
     public id: number,
     public name: string,
@@ -45,6 +45,6 @@ export class Videoggame implements VideogameProps {
     public year: number,
     public multiplayer: boolean,
     public hours: number,
-    public value: number
+    public value: number,
   ) {}
 }

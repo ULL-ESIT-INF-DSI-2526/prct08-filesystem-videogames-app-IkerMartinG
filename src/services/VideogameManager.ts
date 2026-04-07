@@ -1,7 +1,7 @@
 import fs from "fs";
 import path from "path";
 import chalk from "chalk";
-import { Videoggame, VideogameProps } from "../models/Videogame.js";
+import { VideogameProps } from "../models/Videogame.js";
 import { colorValue } from "../utils/colors.js";
 
 /**
