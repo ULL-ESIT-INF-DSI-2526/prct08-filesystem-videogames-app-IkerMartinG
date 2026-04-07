@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { Videogame, Platform, Genre } from "../src/models/Videogame.ts";
+import { Videogame, Platform, Genre } from "../../src/ejercicio-1/models/Videogame.js";
 
 describe("Videogame model", () => {
   test("Getters work correctly", () => {

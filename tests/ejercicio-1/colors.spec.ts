@@ -1,5 +1,5 @@
 import { describe, test, expect } from "vitest";
-import { colorValue } from "../src/utils/colors.ts";
+import { colorValue } from "../../src//ejercicio-1/utils/colors.js";
 
 describe("Color utilities", () => {
   test("Low value returns a color", () => {
