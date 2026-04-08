@@ -136,6 +136,5 @@ yargs(hideBin(process.argv))
     (argv) => manager.read(argv.user, argv.id)
   )
 
-  // Muestra ayuda general del CLI
   .help()
   .parse();

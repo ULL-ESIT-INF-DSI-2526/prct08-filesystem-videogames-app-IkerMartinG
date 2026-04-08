@@ -1,0 +1,9 @@
+===== input.txt =====
+Hola mundo
+Esto es una prueba
+Otra línea más
+
+
+===== a.txt =====
+aaaaaaa
+
